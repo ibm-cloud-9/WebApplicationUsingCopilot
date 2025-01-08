@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Website</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#about-me">About Me</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact-form">Contact Form</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="about-me">
+            <h2>About Me</h2>
+            <p>This is the about me section.</p>
+        </section>
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="projects-container">
+                <div class="project-card">
+                    <h3>Project 1</h3>
+                    <p>Description of Project 1.</p>
+                </div>
+                <div class="project-card">
+                    <h3>Project 2</h3>
+                    <p>Description of Project 2.</p>
+                </div>
+                <div class="project-card">
+                    <h3>Project 3</h3>
+                    <p>Description of Project 3.</p>
+                </div>
+            </div>
+        </section>
+        <section id="skills">
+            <h2>Skills</h2>
+            <ul class="skills-list">
+                <li class="skill-item">HTML</li>
+                <li class="skill-item">CSS</li>
+                <li class="skill-item">JavaScript</li>
+                <li class="skill-item">Python</li>
+            </ul>
+
+        <style>
+            .hamburger {
+                display: none;
+                cursor: pointer;
+                font-size: 2rem;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            nav ul {
+                list-style: none;
+                padding: 0;
+                display: flex;
+            }
+
+            nav ul.visible {
+                display: block;
+            }
+
+            @media (max-width: 768px) {
+                .hamburger {
+                    display: block;
+                }
+
+                nav ul {
+                    display: none;
+                    flex-direction: column;
+                }
+            }
+        </style>
+        </section>
+        <section id="contact-form">
+            <h2>Contact Form</h2>
+            <form action="/submit-form" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+                
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 My Website</p>
+    </footer>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menu = document.querySelector('nav ul');
+        const hamburger = document.createElement('div');
+        hamburger.classList.add('hamburger');
+        hamburger.innerHTML = '&#9776;';
+        document.body.insertBefore(hamburger, document.body.firstChild);
+
+        hamburger.addEventListener('click', function() {
+            menu.classList.toggle('visible');
+        });
+
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+    function filterProjects(category) {
+        const projects = document.querySelectorAll('.project-card');
+        projects.forEach(project => {
+            if (category === 'all' || project.classList.contains(category)) {
+                project.style.display = 'block';
+            } else {
+                project.style.display = 'none';
+            }
+        });
+    }
+
+    function openLightbox(imageSrc) {
+        const lightbox = document.createElement('div');
+        lightbox.classList.add('lightbox');
+        lightbox.innerHTML = `
+            <div class="lightbox-content">
+                <span class="close">&times;</span>
+                <img src="${imageSrc}" alt="Project Image">
+            </div>
+        `;
+        document.body.appendChild(lightbox);
+
+        lightbox.querySelector('.close').addEventListener('click', function() {
+            document.body.removeChild(lightbox);
+        });
+
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                document.body.removeChild(lightbox);
+            }
+        });
+    }
+
+    document.querySelectorAll('.project-card img').forEach(img => {
+        img.addEventListener('click', function() {
+            openLightbox(this.src);
+        });
+    });
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !message) {
+            e.preventDefault();
+            alert('Please fill in all fields.');
+        }
+    });
+    document.getElementById('name').addEventListener('input', function() {
+        const nameError = document.getElementById('name-error');
+        if (!this.value.trim()) {
+            nameError.textContent = 'Name is required.';
+        } else {
+            nameError.textContent = '';
+        }
+    });
+
+    document.getElementById('email').addEventListener('input', function() {
+        const emailError = document.getElementById('email-error');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!this.value.trim()) {
+            emailError.textContent = 'Email is required.';
+        } else if (!emailPattern.test(this.value.trim())) {
+            emailError.textContent = 'Please enter a valid email address.';
+        } else {
+            emailError.textContent = '';
+        }
+    });
+
+    document.getElementById('message').addEventListener('input', function() {
+        const messageError = document.getElementById('message-error');
+        if (!this.value.trim()) {
+            messageError.textContent = 'Message is required.';
+        } else {
+            messageError.textContent = '';
+        }
+    });
+
+</script>
+</html>
